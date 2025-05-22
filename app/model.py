@@ -7,11 +7,23 @@ from PIL import Image
 model = get_model(
     "jasperai/LBM_relighting",
     torch_dtype=torch.bfloat16,
-    device="cuda" if torch.cuda.is_available() else "cpu",
+    device="cuda",
 )
+
+# print("Model loaded on device:", next(model.parameters()).device)
 
 # load the source image
 def relight_image(input_image: Image.Image, num_sampling_steps: int = 1) -> Image.Image:
-    # Perform relighting inference on the input PIL Image
+    # Perform inference
     output_image = evaluate(model, input_image, num_sampling_steps=num_sampling_steps)
-    return output_image
+
+    # Resize output image to match original input
+    output_image = output_image.resize(input_image.size)
+
+    # Combine both images side by side
+    combined_width = input_image.width * 2
+    combined_image = Image.new("RGB", (combined_width, input_image.height))
+    combined_image.paste(input_image, (0, 0))
+    combined_image.paste(output_image, (input_image.width, 0))
+
+    return combined_image
