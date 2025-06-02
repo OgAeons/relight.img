@@ -20,10 +20,12 @@ def relight_image(input_image: Image.Image, num_sampling_steps: int = 1) -> Imag
     # Resize output image to match original input
     output_image = output_image.resize(input_image.size)
 
-    # Combine both images side by side
-    combined_width = input_image.width * 2
-    combined_image = Image.new("RGB", (combined_width, input_image.height))
-    combined_image.paste(input_image, (0, 0))
-    combined_image.paste(output_image, (input_image.width, 0))
+    return output_image
 
-    return combined_image
+    # # Combine both images side by side
+    # combined_width = input_image.width * 2
+    # combined_image = Image.new("RGB", (combined_width, input_image.height))
+    # combined_image.paste(input_image, (0, 0))
+    # combined_image.paste(output_image, (input_image.width, 0))
+
+    # return combined_image
